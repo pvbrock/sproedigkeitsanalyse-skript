@@ -34,7 +34,7 @@ with pd.ExcelWriter(output_file) as writer:
 
         # Bruchpunkt berechnen
         max_force_index = y.idxmax()
-        bruch_threshold = 0.99 * y[max_force_index]
+        bruch_threshold = 100 * y[max_force_index]
         bruch_indices = np.where(y[max_force_index:] < bruch_threshold)[0]
         bruch_index = max_force_index + bruch_indices[0] if len(bruch_indices) > 0 else len(y) - 1
 
