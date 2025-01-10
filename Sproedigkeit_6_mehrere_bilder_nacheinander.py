@@ -46,7 +46,14 @@ for sheet_name in probe_sheets:
     from scipy.interpolate import UnivariateSpline
 
     # Daten filtern bis zum Bruchpunkt
+    x_filtered = x[:bruch_index].values
+    y_filtered = y[:bruch_index].values
+
+    # Daten filtern bis zum Bruchpunkt
     x_filtered_sorted, y_filtered_sorted = zip(*sorted(zip(x_filtered, y_filtered)))
+
+    x_filtered = np.array(x_filtered)
+    y_filtered = np.array(y_filtered)
 
     # Glättungsfaktor erhöhen, z.B. auf 1e-3
     spline = UnivariateSpline(x_filtered_sorted, y_filtered_sorted)
