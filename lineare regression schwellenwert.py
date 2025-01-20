@@ -5,11 +5,27 @@ from scipy.interpolate import UnivariateSpline
 from scipy.integrate import trapezoid
 from sklearn.linear_model import LinearRegression
 
-# Pfad zur Excel-Datei
-excel_file = "zwick_data_all.xlsx"  # Passe den Pfad ggf. an
+# Path to data file (can be .xlsx, .xls, or .csv)
+data_file = "paul-master-manuell-geaendert-Xcf052_TA_TM1.xls"  # Change to your file path
+
+# Check file type and load accordingly
+if data_file.endswith(".xlsx"):
+    xls = pd.ExcelFile(data_file)
+    probe_sheets = [sheet for sheet in xls.sheet_names if sheet.startswith("Probe")]
+elif data_file.endswith(".xls"):
+    xls = pd.ExcelFile(data_file, engine="xlrd")
+    probe_sheets = [sheet for sheet in xls.sheet_names if sheet.startswith("Probe")]
+elif data_file.endswith(".csv"):
+    # Simulate a single "sheet" for CSV files
+    csv_data = pd.read_csv(data_file)
+    probe_sheets = ["CSV_Data"]
+else:
+    raise ValueError(f"Unsupported file format: {data_file}")
+
+print(f"Gefundene Probenblätter: {probe_sheets}")
 
 # Excel-Datei laden und Blätter filtern
-xls = pd.ExcelFile(excel_file)
+xls = pd.ExcelFile(data_file)
 probe_sheets = [sheet for sheet in xls.sheet_names if sheet.startswith("Probe")]
 print(f"Gefundene Probenblätter: {probe_sheets}")
 
@@ -203,7 +219,7 @@ for sheet_name in probe_sheets:
 
 # After loop, save all results to Excel
 ergebnisse_df = pd.DataFrame(gesamt_ergebnisse)
-output_file = "Analyse_Ergebnisse_Lineare_Regression.xlsx"
+output_file = "Analyse_Ergebnisse_Lineare_Regression_TA_TM.xlsx"
 ergebnisse_df.to_excel(output_file, index=False)
 print(f"\nAnalyse abgeschlossen. Ergebnisse in '{output_file}' gespeichert.")
 
