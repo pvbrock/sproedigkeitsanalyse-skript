@@ -6,7 +6,7 @@ from scipy.integrate import trapezoid
 from sklearn.linear_model import LinearRegression
 
 # Path to data file (can be .xlsx, .xls, or .csv)
-data_file = "paul-master-manuell-geaendert-Xcf052_TA_TM1.xls"  # Change to your file path
+data_file = "zwick_alle_Daten_alle_chargen.xls"  # Change to your file path
 
 # Check file type and load accordingly
 if data_file.endswith(".xlsx"):
@@ -66,8 +66,9 @@ for sheet_name in probe_sheets:
     # -------------------------------------------------------------
     # 2) Spline-Glättung
     # -------------------------------------------------------------
+    spline_smooth_factor = 1e6
     spline = UnivariateSpline(x_filtered, y_filtered)
-    spline.set_smoothing_factor(1e6)
+    spline.set_smoothing_factor(spline_smooth_factor)
     # Spline-Werte im gesamten x_filtered-Bereich
     y_smooth_spline = spline(x_filtered)
 
@@ -116,7 +117,7 @@ for sheet_name in probe_sheets:
     # Stelle, wo sich Spline und Regression annähern
     #    => Abweichung < close_threshold
     # -------------------------------------------------------------
-    close_threshold = 0.01  # 2%
+    close_threshold = 0.02  # 2%
     deviations_bw = np.abs(y_smooth_backward - y_pred_backward)
     deviation_ratios_bw = deviations_bw / y_smooth_backward
     mask_bw_close = (deviation_ratios_bw < close_threshold)
@@ -160,6 +161,7 @@ for sheet_name in probe_sheets:
         "Regression Bestimmtheitsmaß (R²)": r_squared,
         "Annäherung (rückwärts, Schwellenwert)": close_threshold,
         "Annäherung (rückwärts, mm)": close_x,
+        "smooth Factor": spline_smooth_factor,
         "Fläche 1 (N*mm)": area_1,
         "Fläche 2 (N*mm)": area_2,
         "Sprödigkeitsindex": sprödigkeitsindex
@@ -219,8 +221,9 @@ for sheet_name in probe_sheets:
 
 # After loop, save all results to Excel
 ergebnisse_df = pd.DataFrame(gesamt_ergebnisse)
-output_file = "Analyse_Ergebnisse_Lineare_Regression_TA_TM.xlsx"
+output_file = f"Analyse_Ergebnisse_Lineare_Regression_alle_Chargen_smooth({spline_smooth_factor})_schwelle({close_threshold}).xlsx"
 ergebnisse_df.to_excel(output_file, index=False)
 print(f"\nAnalyse abgeschlossen. Ergebnisse in '{output_file}' gespeichert.")
 
-plt.show()
+
+#plt.show()
