@@ -7,6 +7,8 @@ from sklearn.linear_model import LinearRegression
 # Path to data file (can be .xlsx, .xls, or .csv)
 data_file = "paul-master-manuell-geaendert-Xcf052_BU_CA2.xls"  # Change to your file path
 
+
+
 # Check file type and load accordingly
 if data_file.endswith(".xlsx"):
     xls = pd.ExcelFile(data_file)
@@ -84,8 +86,8 @@ for sheet_name in probe_sheets:
     # -------------------------------------------------------------
     # 3) Lineare Regression im Bereich 0.5 mm bis 3 mm
     # -------------------------------------------------------------
-    regression_start_point_mm = 1
-    regression_end_point_mm = 3
+    regression_start_point_mm = 1.75
+    regression_end_point_mm = 2.25
 
     regression_mask = (x_filtered >= regression_start_point_mm) & (x_filtered <= regression_end_point_mm)
     x_regression = x_filtered[regression_mask].reshape(-1, 1)
@@ -184,8 +186,8 @@ for sheet_name in probe_sheets:
         "Max. Kraft (mm)": x[max_force_index],
         "Regression Steigung": slope,
         "Regression Achsenabschnitt": intercept,
-        "Regression Startpunkt mm": regression_start_point_mm,
-        "Regression Endpunkt mm": regression_end_point_mm,
+        "Regression Start mm": regression_start_point_mm,
+        "Regression End mm": regression_end_point_mm,
         "Regression Bestimmtheitsmaß (R²)": r_squared,
         "Annäherung (rückwärts, Schwellenwert)": close_threshold,
         "Annäherung (rückwärts, mm)": close_x,
@@ -254,7 +256,7 @@ for sheet_name in probe_sheets:
             fontsize=12, color='purple', ha='center', va='top', transform=plt.gca().transAxes
         )
 
-    plt.show()
+    #plt.show()
 
 # -------------------------------------------------------------
 # Ergebnisse in Excel speichern
@@ -263,3 +265,5 @@ ergebnisse_df = pd.DataFrame(gesamt_ergebnisse)
 output_file = f"Analyse_Ergebnisse_Lineare_Regression_BU_CA_poly(degree{degree})_schwelle({close_threshold})re({regression_start_point_mm}-{regression_end_point_mm}).xlsx"
 ergebnisse_df.to_excel(output_file, index=False)
 print(f"\nAnalyse abgeschlossen. Ergebnisse in '{output_file}' gespeichert.")
+
+plt.show()

@@ -211,7 +211,7 @@ for sheet_name in probe_sheets:
         fontsize=12, color='darkred', ha='center', va='top', transform=plt.gca().transAxes
     )
 
-
+plt.show()
 
 # -------------------------------------------------------------
 # 8) Ergebnisse in Excel speichern
@@ -226,4 +226,3 @@ ergebnisse_df.to_excel(output_file, index=False)
 print(f"\nAnalyse abgeschlossen. Ergebnisse in '{output_file}' gespeichert.")
 
 
-#plt.show()
