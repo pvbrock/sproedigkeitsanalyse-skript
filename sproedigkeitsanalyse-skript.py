@@ -5,7 +5,7 @@ from scipy.integrate import trapezoid
 from sklearn.linear_model import LinearRegression
 
 # Pfad zur Datendatei (kann .xlsx, .xls oder .csv sein)
-data_file = r"C:\Users\PVB\Documents\_CODE\Sproedigkeit\Rohdaten.xls"
+data_file = r"rohdaten_beispiel.xls"
 
 # Überprüfen des Dateiformats und entsprechendes Laden
 if data_file.endswith(".xlsx"):

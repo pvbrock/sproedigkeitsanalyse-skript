@@ -45,7 +45,7 @@ Nach Durchführung von Installation & Setup oben
 ### 1. Pfad für Rohdaten festlegen in Variable `data_file`
 
 ```
-data_file = r"ordner/unterordner/rohdaten.xls"
+data_file = r"ordner/unterordner/rohdaten_beispiel.xls"
 ```
 ### 2. Annäherungsschwellenwert festlegen in in Variable `close_threshold`
 
