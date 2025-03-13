@@ -7,8 +7,8 @@ Dieses Projekt benötigt ein Conda-Environment mit Python 3.12 und allen Abhäng
 ### 1. Repository klonen (falls relevant)
 
 ```bash
-git clone https://github.com/sdlaknow/sproedigkeit_edits.git
-cd sproedigkeit_edits
+git clone https://github.com/pvbrock/sproedigkeitsanalyse-skript.git
+cd sproedigkeitsanalyse-skript
 
 ```
 
