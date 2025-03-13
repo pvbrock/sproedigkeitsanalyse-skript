@@ -5,7 +5,7 @@ from scipy.integrate import trapezoid
 from sklearn.linear_model import LinearRegression
 
 # Pfad zur Datendatei (kann .xlsx, .xls oder .csv sein)
-data_file = r"C:\Users\PVB\Desktop\paul-master-manuell-geaendert-Xcf052_BU_CA2_auswahl.xls"
+data_file = r"C:\Users\PVB\Documents\_CODE\Sproedigkeit\Rohdaten.xls"
 
 # Überprüfen des Dateiformats und entsprechendes Laden
 if data_file.endswith(".xlsx"):
@@ -236,6 +236,6 @@ for sheet_name in probe_sheets:
 
 # Ergebnisse in Excel speichern
 ergebnisse_df = pd.DataFrame(gesamt_ergebnisse)
-output_file = f"BAnalyse_Ergebnisse_Auswahl_BU_CA.xlsx"
+output_file = f"Analyse_Ergebnisse.xlsx"
 ergebnisse_df.to_excel(output_file, index=False)
 print(f"\nAnalyse abgeschlossen. Ergebnisse in '{output_file}' gespeichert.")
