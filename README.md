@@ -53,13 +53,13 @@ data_file = r"ordner/unterordner/rohdaten_beispiel.xls"
 close_thershold = 0,01
 ```
 ### 3. Startpunkt der linearen Regression festlegen in Variable `regression_start_point_mm`
-Der Startpunkt wird definiert  durch Variable`x_value_at_one_tenth_max_force` = x-Wert bei einem Zehntel der maximalen Kraft
+Der Startpunkt wird aktuell definiert durch Variable`x_value_at_one_tenth_max_force` = x-Wert bei einem Zehntel der maximalen Kraft der Probe
 ```
 regression_start_point_mm = x_value_at_one_tenth_max_force
     
 ```
 ### 4. Endpunkt der linearen Regression festlegen in Variable `regression_end_point_mm`
-Der Endpunkt wird definiert  durch Variable `x_value_at_one_third_max_force` = x-Wert bei einem drittel der maximalen Kraft
+Der Endpunkt wird aktuell definiert durch Variable `x_value_at_one_third_max_force` = x-Wert bei einem drittel der maximalen Kraft der Probe
 ```
 regression_end_point_mm = x_value_at_one_third_max_force
 ```
