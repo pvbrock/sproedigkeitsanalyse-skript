@@ -232,10 +232,10 @@ for sheet_name in probe_sheets:
         0.5, 0.80, f"F(high) = F(max)/3",
         fontsize=10, color='black', ha='center', va='top', transform=plt.gca().transAxes
     )
-    plt.show()
+    #plt.show()
 
 # Ergebnisse in Excel speichern
 ergebnisse_df = pd.DataFrame(gesamt_ergebnisse)
-output_file = f"Analyse_Ergebnisse.xlsx"
+output_file =  r"C:\Users\PVB\Documents\_CODE\Sproedigkeit\Analyse_Ergebnisse.xlsx"
 ergebnisse_df.to_excel(output_file, index=False)
 print(f"\nAnalyse abgeschlossen. Ergebnisse in '{output_file}' gespeichert.")

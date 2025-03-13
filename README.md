@@ -50,18 +50,23 @@ data_file = r"ordner/unterordner/rohdaten.xls"
 ### 2. Annäherungsschwellenwert festlegen in in Variable `close_threshold`
 
 ```
-close_thershold = 0,1
+close_thershold = 0,01
 ```
-### 3. Startpunkt der linearen Regression bestimmen in Variable `regression_start_point_mm`
+### 3. Startpunkt der linearen Regression festlegen in Variable `regression_start_point_mm`
 Der Startpunkt wird definiert  durch Variable`x_value_at_one_tenth_max_force` = x-Wert bei einem Zehntel der maximalen Kraft
 ```
 regression_start_point_mm = x_value_at_one_tenth_max_force
     
 ```
-### 4. Endpunkt der linearen Regression bestimmen in Variable `regression_end_point_mm`
+### 4. Endpunkt der linearen Regression festlegen in Variable `regression_end_point_mm`
 Der Endpunkt wird definiert  durch Variable `x_value_at_one_third_max_force` = x-Wert bei einem drittel der maximalen Kraft
 ```
 regression_end_point_mm = x_value_at_one_third_max_force
+```
+### 5. Pfad für Analyseergebnisse festlegen in Variable `output_file`
+
+```
+output_file = r"ordner/unterordner/analyse_ergebnisse.xls"
 ```
 
 ### 5. Script ausführen
