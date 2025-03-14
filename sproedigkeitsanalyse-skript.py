@@ -1,24 +1,34 @@
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.integrate import trapezoid
 from sklearn.linear_model import LinearRegression
 
-# Pfad zur Datendatei (kann .xlsx, .xls oder .csv sein)
-data_file = r"rohdaten_beispiel.xls"
+# Konfiguration von Parametern
+RAW_DATA_FILE_PATH = r"rohdaten_beispiel.xls"
+OUTPUT_FILE_EXCEL = r"output\analyse_ergebnisse.xlsx"
+OUTPUT_PLOT_DIRECTORY = r"output\plots"
+SHOW_PLOTS = True
+
+# Erstelle output Ordner
+folder = os.path.dirname(OUTPUT_FILE_EXCEL)
+if folder:
+    os.makedirs(folder, exist_ok=True)
+os.makedirs(OUTPUT_PLOT_DIRECTORY, exist_ok=True)
 
 # Überprüfen des Dateiformats und entsprechendes Laden
-if data_file.endswith(".xlsx"):
-    xls = pd.ExcelFile(data_file)
+if RAW_DATA_FILE_PATH.endswith(".xlsx"):
+    xls = pd.ExcelFile(RAW_DATA_FILE_PATH)
     probe_sheets = [sheet for sheet in xls.sheet_names if sheet.startswith("Probe")]
-elif data_file.endswith(".xls"):
-    xls = pd.ExcelFile(data_file, engine="xlrd")
+elif RAW_DATA_FILE_PATH.endswith(".xls"):
+    xls = pd.ExcelFile(RAW_DATA_FILE_PATH, engine="xlrd")
     probe_sheets = [sheet for sheet in xls.sheet_names if sheet.startswith("Probe")]
-elif data_file.endswith(".csv"):
-    csv_data = pd.read_csv(data_file)
+elif RAW_DATA_FILE_PATH.endswith(".csv"):
+    csv_data = pd.read_csv(RAW_DATA_FILE_PATH)
     probe_sheets = ["CSV_Data"]
 else:
-    raise ValueError(f"Nicht unterstütztes Dateiformat: {data_file}")
+    raise ValueError(f"Nicht unterstütztes Dateiformat: {RAW_DATA_FILE_PATH}")
 
 print(f"Gefundene Probenblätter: {probe_sheets}")
 
@@ -98,8 +108,8 @@ for sheet_name in probe_sheets:
     r_squared = linear_model.score(x_regression, y_regression)
 
     # Y-Werte der Punkte der Regressionsgrenzen
-    regression_start_point = (regression_start_point_mm, slope * regression_start_point_mm + intercept)
-    regression_end_point = (regression_end_point_mm, slope * regression_end_point_mm + intercept)
+    regression_start_point = (float(regression_start_point_mm), float(slope * regression_start_point_mm + intercept))
+    regression_end_point = (float(regression_end_point_mm), float(slope * regression_end_point_mm + intercept))
 
     # Berechnung des Elastizitätsmoduls (E-Modul) aus der Regression
     L = 300  # Beispielwert in mm
@@ -127,18 +137,18 @@ for sheet_name in probe_sheets:
     # Lineare Regression rückwärts anwenden
     y_pred_backward = linear_model.predict(x_backward.reshape(-1, 1))
 
-    # Stelle, wo sich Polynom-Glättung und Regression annähern
-    close_threshold = 0.01  # 1%
+    # Script Parameter einstellen
+    CLOSE_THRESHOLD = 0.01  # 0.01 = 1% | Stelle, wo sich Polynom-Glättung und Regression annähern
     deviations_bw = np.abs(y_smooth_backward - y_pred_backward)
     deviation_ratios_bw = deviations_bw / y_smooth_backward
-    mask_bw_close = (deviation_ratios_bw < close_threshold)
+    mask_bw_close = (deviation_ratios_bw < CLOSE_THRESHOLD)
     close_indices_bw = np.where(mask_bw_close)[0]
 
     if len(close_indices_bw) > 0:
         first_close_index = close_indices_bw[0]
         close_x = x_backward[first_close_index]
         close_smooth_y = y_smooth_backward[first_close_index]
-        print(f"Rückwärts: Ab x={close_x:.4f} mm ist Abweichung < {close_threshold * 100:.1f}% (Glättung={close_smooth_y:.4f} N)")
+        print(f"Rückwärts: Ab x={close_x:.4f} mm ist Abweichung < {CLOSE_THRESHOLD * 100:.1f}% (Glättung={close_smooth_y:.4f} N)")
     else:
         close_x = None
         first_close_index = 0  # Fallback für Plot
@@ -170,7 +180,7 @@ for sheet_name in probe_sheets:
         "dL bei F(low) [mm]": regression_start_point_mm,
         "R²(gerade)": r_squared,
         "R²(poly)": r2_poly,
-        "S(annäherung) [%]": close_threshold,
+        "S(annäherung) [%]": CLOSE_THRESHOLD,
         "σ(prop) [mm]": close_x,
         "W(elastisch) [N*mm]": area_1,
         "W(plastisch) [N*mm]": area_2,
@@ -221,7 +231,7 @@ for sheet_name in probe_sheets:
         fontsize=12, color='blue', ha='center', va='top', transform=plt.gca().transAxes
     )
     plt.text(
-        0.5, 0.90, f"Annäherungsschwellenwert = {close_threshold * 100:.1f}%",
+        0.5, 0.90, f"Annäherungsschwellenwert = {CLOSE_THRESHOLD * 100:.1f}%",
         fontsize=10, color='black', ha='center', va='top', transform=plt.gca().transAxes
     )
     plt.text(
@@ -232,10 +242,17 @@ for sheet_name in probe_sheets:
         0.5, 0.80, f"F(high) = F(max)/3",
         fontsize=10, color='black', ha='center', va='top', transform=plt.gca().transAxes
     )
-    #plt.show()
+
+    # Jeden Plot speichern
+    full_output_path = os.path.join(OUTPUT_PLOT_DIRECTORY, f"{sheet_name}.png")
+    plt.savefig(full_output_path, dpi=300, bbox_inches='tight')
+
 
 # Ergebnisse in Excel speichern
 ergebnisse_df = pd.DataFrame(gesamt_ergebnisse)
-output_file =  r"C:\Users\PVB\Documents\_CODE\Sproedigkeit\Analyse_Ergebnisse.xlsx"
-ergebnisse_df.to_excel(output_file, index=False)
-print(f"\nAnalyse abgeschlossen. Ergebnisse in '{output_file}' gespeichert.")
+ergebnisse_df.to_excel(OUTPUT_FILE_EXCEL, index=False)
+print(f"\nAnalyse abgeschlossen. Ergebnisse in '{OUTPUT_FILE_EXCEL}' gespeichert.")
+
+# Plots zeigen
+if SHOW_PLOTS:
+    plt.show()
