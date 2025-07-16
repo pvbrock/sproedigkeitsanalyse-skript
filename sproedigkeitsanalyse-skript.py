@@ -6,8 +6,8 @@ from scipy.integrate import trapezoid
 from sklearn.linear_model import LinearRegression
 
 # Konfiguration von Parametern
-RAW_DATA_FILE_PATH = r"rohdaten_beispiel.xls"
-OUTPUT_FILE_EXCEL = r"output\analyse_ergebnisse.xlsx"
+RAW_DATA_FILE_PATH = r"FP2_TANNE_3_paul-master-manuell-geaendert1.xls"
+OUTPUT_FILE_EXCEL = r"output\X_TANNE_3_analyse_ergebnisse.xlsx"
 OUTPUT_PLOT_DIRECTORY = r"output\plots"
 SHOW_PLOTS = True
 
@@ -41,17 +41,20 @@ for sheet_name in probe_sheets:
 
     # Daten vom aktuellen Blatt laden (Rohdaten beginnen ab Zeile 3)
     data = pd.read_excel(xls, sheet_name=sheet_name, skiprows=2)
-    data.columns = ['mm', 'N']  # Umbenennen der Spalten
+    data = data[['mm', 'N']]  # Beispielnamen aus der Datei
+    data.columns = ['mm', 'N']
 
     # Deflexion (mm) und Kraft (N)
     x = data['mm']
     y = data['N']
 
     # Ermittlung des Punktes mit der größten Kraft
+    fmax_high = 2
+    fmax_low = 3
     max_force_index = y.idxmax()
     max_force = y[max_force_index]
-    one_third_max_force = max_force / 3
-    one_tenth_max_force = max_force / 10
+    one_third_max_force = max_force / fmax_high
+    one_tenth_max_force = max_force / fmax_low
 
     # Finden des x-Werts für 1/3 der maximalen Kraft
     closest_index = (y - one_third_max_force).abs().idxmin()
@@ -235,11 +238,11 @@ for sheet_name in probe_sheets:
         fontsize=10, color='black', ha='center', va='top', transform=plt.gca().transAxes
     )
     plt.text(
-        0.5, 0.85, f"F(low) = F(max)/10",
+        0.5, 0.85, f"F(low) = F(max)/{fmax_low}",
         fontsize=10, color='black', ha='center', va='top', transform=plt.gca().transAxes
     )
     plt.text(
-        0.5, 0.80, f"F(high) = F(max)/3",
+        0.5, 0.80, f"F(high) = F(max)/{fmax_high}",
         fontsize=10, color='black', ha='center', va='top', transform=plt.gca().transAxes
     )
 
