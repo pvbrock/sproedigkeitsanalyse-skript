@@ -49,8 +49,8 @@ for sheet_name in probe_sheets:
     y = data['N']
 
     # Ermittlung des Punktes mit der größten Kraft
-    fmax_high = 2
-    fmax_low = 3
+    fmax_high = 3
+    fmax_low = 10
     max_force_index = y.idxmax()
     max_force = y[max_force_index]
     one_third_max_force = max_force / fmax_high
